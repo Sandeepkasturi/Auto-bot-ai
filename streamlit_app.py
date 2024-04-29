@@ -13,7 +13,7 @@ from pygments.lexers import PythonLexer
 from pygments.formatters import HtmlFormatter
 
 # Set up the Generative AI configuration with a placeholder API key
-configure(api_key=st.secrets["api_key"]))
+configure(api_key=st.secrets["api_key"])
 
 # Create a Generative Model instance (assuming 'gemini-pro' is a valid model)
 model = GenerativeModel('gemini-pro')
