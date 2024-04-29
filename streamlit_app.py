@@ -10,7 +10,11 @@ import textwrap
 from urllib.parse import quote, urlparse
 
 # Set up the Generative AI configuration with a placeholder API key
-configure(api_key='AIzaSyBOc7WOykXVHvnU-GsMgCYZwoBqFERjQFI')
+headers = {
+    "authorization": st.secrets["api_key"],
+    "content-type": "application/json"
+}
+configure(api_key='')
 
 # Create a Generative Model instance (assuming 'gemini-pro' is a valid model)
 model = GenerativeModel('gemini-pro')
@@ -151,7 +155,7 @@ def main():
         "Support the Project.")
     st.sidebar.info("""
          **UPI ID's**
-        
+
          1. Phonepe: 9919932723@ybl
          2. Gpay: sandeepkasturi67@oksbi
          3. Paytm: 9919932723@paytm
@@ -166,7 +170,7 @@ def main():
     st.sidebar.write("Thank you for your support!")
 
     if page == "🏠 Home":
-        
+
         st.write("**Below is a quick tutorial video on how to use the application**:")
         # Replace 'video_url' with the URL of your tutorial video
         video_url = "https://youtu.be/i0Q-NBrYpPI"
@@ -283,12 +287,12 @@ def main():
 
         st.info("use @codex phase to start the prompt")
         st.info("""Example prompt: @codex explain me the code in the file "your_file_name
-        
+
         Some popular Prompts:. 
                 1. @codex explain me the code in the file app.py
                 2. @codex how does this code works in the file app.py
-                
-                
+
+
         """)
         prompt = st.text_area('Type your query here:', height=100)
         st.markdown('---')
@@ -344,7 +348,7 @@ def main():
             else:
                 st.error("Please upload a file.")
             # Display the compiled HTML
-            #display_html(html_code)
+            # display_html(html_code)
         # Display footer
         display_footer()
 
