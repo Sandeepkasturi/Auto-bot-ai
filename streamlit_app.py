@@ -10,11 +10,7 @@ import textwrap
 from urllib.parse import quote, urlparse
 
 # Set up the Generative AI configuration with a placeholder API key
-headers = {
-    "authorization": st.secrets["api_key"],
-    "content-type": "application/json"
-}
-configure(api_key='')
+configure(api_key=st.secrets["api_key"])
 
 # Create a Generative Model instance (assuming 'gemini-pro' is a valid model)
 model = GenerativeModel('gemini-pro')
