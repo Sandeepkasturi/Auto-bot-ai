@@ -144,15 +144,6 @@ To run tests, run the following command
 ## Deployment
 
 To deploy this project you need to setup Streamlit Cloud with Github
-## Usage/Examples
-
-```javascript
-import Component from 'my-project'
-
-function App() {
-  return <Component />
-}
-```
 
 
 ## Used By
