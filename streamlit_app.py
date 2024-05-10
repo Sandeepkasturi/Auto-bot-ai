@@ -123,12 +123,19 @@ def get_binary_file_downloader_html(bin_file, file_label='Download Code'):
 
 # Function to display footer
 def display_footer():
-    # Additional buttons
-    st.markdown('---')
-    st.markdown("&copy; 2024 SKAV TECH . All rights reserved.")
-    st.subheader('@ Follow on')
-    st.markdown("https://bit.ly/socialinstag")
-
+    footer_html = """
+    <style>
+    .footer {
+        padding: 10px;
+        background-color: pink;
+        text-align: center;
+    }
+    </style>
+    <div class="footer">
+        <p style = "color: black; font-size: 15px;"><big>&copy; 2024 SKAV TECH. All rights reserved. | Follow us on <a href="https://bit.ly/socialinstag">Instagram</a></big></p>
+    </div>
+    """
+    st.markdown(footer_html, unsafe_allow_html=True)
 # Main Streamlit application
 def main():
     st.sidebar.image("auto_bot_2.png")
@@ -141,9 +148,7 @@ def main():
     st.sidebar.info(
         "Support the Project.")
     st.sidebar.info("""
-        Payment Details:
-         1. **UPI NUMBER: 9919932723**
-         2. **Name: Kasturi Sandeep**
+        Donate for Knowledge, We will be doing this again ❤️
          """)
 
     st.sidebar.markdown("Click here to UPI QR CODE: "
@@ -152,7 +157,7 @@ def main():
                         )
 
     # Display image with a link for download
-    st.sidebar.write("Thank you for your support ❤️")
+    st.sidebar.write("Thank you for your support 😍️")
 
     if page == "🏠 Home":
         st.title("Welcome to AutoBot 🤖")
@@ -179,7 +184,7 @@ def main():
             video_url = "https://youtu.be/i0Q-NBrYpPI"
             # Embed the video with autoplay
             st.video(video_url, start_time=0)
-
+        st.markdown('---')
         # Display footer
         display_footer()
 
@@ -187,7 +192,7 @@ def main():
         st.image("auto_bot_2.png")
         st.header("AutoBot 🤖")
         st.markdown(
-            "AutoBot is effective for code generation, if your prompt contains code generation then you can get Downloadable files")
+            "AutoBot is effective for code generation, if your prompt contains code generation **-prompt-** then you can get Downloadable files")
         question = st.text_input("Ask the model a question:")
         if st.button("Ask AI"):
             try:
