@@ -5,14 +5,13 @@ import os
 import time
 import base64
 from google.generativeai import configure, GenerativeModel
-from urllib.parse import quote, urlparse
+from urllib.parse import urlparse
 
 # Set up the Generative AI configuration with a placeholder API key
 configure(api_key=st.secrets["api_key"])
 
 # Create a Generative Model instance (assuming 'gemini-pro' is a valid model)
 model = GenerativeModel('gemini-pro')
-
 
 # Function to download HTML code
 def download_html_code(html_content, url):
@@ -25,7 +24,6 @@ def download_html_code(html_content, url):
     except Exception as e:
         st.error(f"Failed to download HTML code: {e}")
 
-
 # Function to redirect to GitHub Codespaces
 def redirect_to_codespaces():
     with st.spinner("Redirecting to GitHub Codespaces..."):
@@ -33,7 +31,6 @@ def redirect_to_codespaces():
     webbrowser.open_new_tab("https://github.com/codespaces")
     st.info("If the application can't redirect, use the link below:")
     st.markdown("[GitHub Codespaces](https://github.com/codespaces)")
-
 
 # Function to download generated code
 def download_generated_code(content, filename, format='txt'):
@@ -48,7 +45,6 @@ def download_generated_code(content, filename, format='txt'):
     st.markdown(href, unsafe_allow_html=True)
     os.remove(temp_filename)
 
-
 # Function to display file download link
 def get_binary_file_downloader_html(bin_file, file_label='Download Code'):
     with open(bin_file, 'rb') as f:
@@ -56,7 +52,6 @@ def get_binary_file_downloader_html(bin_file, file_label='Download Code'):
     b64 = base64.b64encode(data).decode()
     href = f'<a href="data:file/html;base64,{b64}" download="{bin_file}" target="_blank">{file_label}</a>'
     return href
-
 
 # Function to display footer
 def display_footer():
@@ -76,6 +71,42 @@ def display_footer():
     """
     st.markdown(footer_html, unsafe_allow_html=True)
 
+# Function to fetch YouTube video suggestions
+def fetch_youtube_videos(query):
+    api_key = st.secrets["youtube_api_key"]
+    search_url = "https://www.googleapis.com/youtube/v3/search"
+    params = {
+        "part": "snippet",
+        "q": query,
+        "type": "video",
+        "maxResults": 4,
+        "key": api_key
+    }
+    response = requests.get(search_url, params=params)
+    video_details = []
+    if response.status_code == 200:
+        results = response.json()["items"]
+        for item in results:
+            video_id = item["id"]["videoId"]
+            video_title = item["snippet"]["title"]
+            video_url = f"https://www.youtube.com/watch?v={video_id}"
+            video_details.append({
+                "title": video_title,
+                "url": video_url,
+                "video_id": video_id
+            })
+    else:
+        st.error(f"Failed to fetch YouTube videos 😭. Status code: {response.status_code}")
+    return video_details
+
+# Function to extract the main topic from the prompt
+def extract_topic(prompt):
+    start_phrase = "@codex" or "codex" or "@autobot"
+    if prompt.lower().startswith(start_phrase):
+        topic = prompt[len(start_phrase):].strip()
+    else:
+        topic = prompt.strip()
+    return topic
 
 # Main Streamlit application
 def main():
@@ -160,42 +191,106 @@ def main():
 
         display_footer()
 
+
+
     elif page == "CODEX ⚡":
+
         st.header("CODEX ⚡️")
+
         uploaded_files = st.file_uploader("Upload code files:", accept_multiple_files=True)
+
         st.markdown("""
+
             Welcome to **CODEX**
+
             Interactive CODING GUIDE, No one can explain Code like me trust me.
+
+            CODEX is one way fun Feature, You can get Youtube Suggestion based on your Queries.
+
+
             1. You can ask specific code or content using the phrase @codex "prompt".
+
+
             2. You can upload your code here to ask the CODEX to generate an explanation (for example: @codex Can you explain me this code in the file "filename").
+
+
             3. I can generate 60 queries per minute. Pretty wild right? Haha, more to see and explore.
+
         """)
+
         st.info("""Example prompt: @codex explain me the code in the file "your_file_name"
 
+
         Some popular prompts:
+
         1. @codex explain me the code in the file app.py
+
         2. @codex how does this code work in the file app.py
+
         3. @codex can you explain me this code: "paste your code"
+
         """)
+
         st.warning("Use @codex phrase to start the prompt")
 
-        prompt = st.text_area('Type your query here:', height=300)
+        prompt = st.text_area('Type your query here:', height=100)
+
         st.markdown('---')
+
         if st.button('Submit'):
+
             if prompt or uploaded_files:
+
                 with st.spinner("Processing..."):
+
                     if prompt:
+
                         response = model.generate_content(prompt)
+
                         st.write("CODEX Response:")
+
                         st.write(response.text)
+
+                        topic = extract_topic(prompt)
+
+                        video_suggestions = fetch_youtube_videos(topic)
+
+                        if video_suggestions:
+
+                            st.markdown("### YouTube Video Suggestions:")
+
+                            for video in video_suggestions:
+                                st.write(f"[{video['title']}]({video['url']})")
+
+                                st.video(video["url"])
+
                     if uploaded_files:
+
                         for file in uploaded_files:
+
                             st.write(f"Code for {file.name}:")
+
                             st.code(file.getvalue().decode("utf-8"))  # Display file content as code
+
                             response = model.generate_content(file.getvalue().decode("utf-8"))
+
                             st.write("CODEX Response:")
+
                             st.write(response.text)
+
+                            video_suggestions = fetch_youtube_videos(file.getvalue().decode("utf-8"))
+
+                            if video_suggestions:
+
+                                st.markdown("### YouTube Video Suggestions:")
+
+                                for video in video_suggestions:
+                                    st.write(f"[{video['title']}]({video['url']})")
+
+                                    st.video(video["url"])
+
             else:
+
                 st.error("Please provide a query or upload a file.")
 
         display_footer()
