@@ -178,6 +178,7 @@ def main():
             "AutoBot powered **Web Scrapper**. This tool will get the code of any website. Simply enter the URL below. Download Extracted Code.")
         url = st.text_input("Enter URL:")
         if st.button("Extract HTML Code"):
+            st.ballons()
             with st.spinner("Extracting HTML code..."):
                 try:
                     response = requests.get(url)
@@ -207,6 +208,7 @@ def main():
 
             CODEX is one way fun Feature, You can get Youtube Suggestion based on your Queries.
 
+            **If you face ValueError or Type Error, Try changing the Prompt, This is may be because of Gemini API restrictions**
 
             1. You can ask specific code or content using the phrase @codex "prompt".
 
@@ -235,9 +237,10 @@ def main():
 
         prompt = st.text_area('Type your query here:', height=100)
 
-        st.markdown('---')
 
         if st.button('Submit'):
+            
+            st.markdown('---')
 
             if prompt or uploaded_files:
 
