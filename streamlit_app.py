@@ -66,7 +66,7 @@ def display_footer():
     }
     </style>
     <div class="footer">
-        <p style="color: red;"><big>&copy; 2024 SKAV TECH. All rights reserved. | Follow us on <a href="https://bit.ly/socialinstag">Instagram</a></big></p>
+        <p style="color: red;"><b>&copy; 2024 SKAV TECH. All rights reserved. | Follow us on <a href="https://bit.ly/socialinstag">Instagram</a></b></p>
     </div>
     """
     st.markdown(footer_html, unsafe_allow_html=True)
@@ -295,6 +295,7 @@ def main():
             else:
 
                 st.error("Please provide a query or upload a file.")
+                st.markdown('---')
 
         display_footer()
 
