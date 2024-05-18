@@ -149,21 +149,30 @@ def main():
 
         question = st.text_input("Ask the model a question:")
         if st.button("Ask AI"):
-            with st.spinner("Generating response..."):
+            with st.spinner("Generating response 😉😗..."):
                 try:
                     response = model.generate_content(question)
-                    st.text("AutoBot Response:")
-                    st.write(response.text)
-                    st.markdown('---')
-                    st.markdown(
-                        "Security Note: We use **.txt** file format for code downloads, which is not easily susceptible to virus and malware attacks.")
+                    if response.text:
+                        st.text("AutoBot Response:")
+                        st.write(response.text)
+                        st.markdown('---')
+                        st.markdown(
+                            "Security Note: We use **.txt** file format for code downloads, which is not easily susceptible to virus and malware attacks.")
+                    else:
+                        st.error("No valid response received from the AI model.")
+                        st.write(f"Safety ratings: {response.safety_ratings}")
+                except ValueError as e:
+                            st.info(f"😭  💔 I can't Assist you with that, try other prompts. It violates someones privacy or Out of my Knowledge. A ValueError occurred: {e}")
+                except IndexError as e:
+                            st.info(f"🤐 💔 I can't Assist you with that, try other prompts. It violates someones privacy or Out of my Knowledge. An IndexError occurred: {e}")
                 except Exception as e:
-                    st.error(f"An error occurred: {e}")
+                            st.info(f"🤐 I can't Assist you with that, try other prompts. It violates someones privacy or Out of my Knowledge. An unexpected error occurred: {e}")
 
                 code_keywords = ["code", "write code", "develop code", "generate code", "generate", "build"]
                 if any(keyword in question.lower() for keyword in code_keywords):
-                    download_generated_code(response.text, "generated_code")
-
+                    if response.text:
+                        download_generated_code(response.text, "generated_code")
+        st.markdown('---')
         display_footer()
 
     elif page == "GitHub Codespaces 🖥️":
@@ -178,21 +187,19 @@ def main():
             "AutoBot powered **Web Scrapper**. This tool will get the code of any website. Simply enter the URL below. Download Extracted Code.")
         url = st.text_input("Enter URL:")
         if st.button("Extract HTML Code"):
-            st.ballons()
-            with st.spinner("Extracting HTML code..."):
+            with st.spinner("Extracting HTML code 🤓..."):
                 try:
                     response = requests.get(url)
                     if response.status_code == 200:
                         extracted_html = response.text
                         download_html_code(extracted_html, url)
+                        st.balloons()
                     else:
-                        st.error(f"Failed to retrieve HTML content 😕. Status code: {response.status_code}")
+                        st.info(f"😖 Failed to retrieve HTML content. Status code: {response.status_code}")
                 except Exception as e:
-                    st.error(f"An error occurred: {e}")
+                    st.info(f"🧐 Check the URL and Try agian. If same problem faces use different URL. An error occurred: {e}")
 
         display_footer()
-
-
 
     elif page == "CODEX ⚡":
 
@@ -212,9 +219,7 @@ def main():
 
             1. You can ask specific code or content using the phrase @codex "prompt".
 
-
             2. You can upload your code here to ask the CODEX to generate an explanation (for example: @codex Can you explain me this code in the file "filename").
-
 
             3. I can generate 60 queries per minute. Pretty wild right? Haha, more to see and explore.
 
@@ -236,69 +241,74 @@ def main():
         st.warning("Use @codex phrase to start the prompt")
 
         prompt = st.text_area('Type your query here:', height=100)
-
-
+        st.markdown(' **If you face Problem in Generating your Query, Try changing the Prompt, This is may be because of Gemini API restrictions**')
         if st.button('Submit'):
-            
             st.markdown('---')
 
             if prompt or uploaded_files:
-
-                with st.spinner("Processing..."):
+                with st.spinner("Processing 🧐..."):
 
                     if prompt:
+                        try:
+                            response = model.generate_content(prompt)
+                            if response.text:
+                                st.write("CODEX Response:")
+                                st.write(response.text)
 
-                        response = model.generate_content(prompt)
+                                topic = extract_topic(prompt)
+                                video_suggestions = fetch_youtube_videos(topic)
 
-                        st.write("CODEX Response:")
-
-                        st.write(response.text)
-
-                        topic = extract_topic(prompt)
-
-                        video_suggestions = fetch_youtube_videos(topic)
-
-                        if video_suggestions:
-
-                            st.markdown("### YouTube Video Suggestions:")
-
-                            for video in video_suggestions:
-                                st.write(f"[{video['title']}]({video['url']})")
-
-                                st.video(video["url"])
+                                if video_suggestions:
+                                    st.markdown("### YouTube Video Suggestions:")
+                                    for video in video_suggestions:
+                                        st.write(f"[{video['title']}]({video['url']})")
+                                        st.video(video["url"])
+                            else:
+                                st.error("No valid response received from the AI model.")
+                                st.write(f"Safety ratings: {response.safety_ratings}")
+                        except ValueError as e:
+                            st.info(f"😭  💔 I can't Assist you with that, try other prompts. It violates someones privacy or Out of my Knowledge. A ValueError occurred: {e}")
+                        except IndexError as e:
+                            st.info(f"🤐 💔 I can't Assist you with that, try other prompts. It violates someones privacy or Out of my Knowledge. An IndexError occurred: {e}")
+                        except Exception as e:
+                            st.info(f"🤐 I can't Assist you with that, try other prompts. It violates someones privacy or Out of my Knowledge. An unexpected error occurred: {e}")
 
                     if uploaded_files:
-
                         for file in uploaded_files:
-
                             st.write(f"Code for {file.name}:")
+                            file_content = file.getvalue().decode("utf-8")
+                            st.code(file_content)  # Display file content as code
 
-                            st.code(file.getvalue().decode("utf-8"))  # Display file content as code
+                            try:
+                                response = model.generate_content(file_content)
+                                if response.text:
+                                    st.write("CODEX Response:")
+                                    st.write(response.text)
 
-                            response = model.generate_content(file.getvalue().decode("utf-8"))
-
-                            st.write("CODEX Response:")
-
-                            st.write(response.text)
-
-                            video_suggestions = fetch_youtube_videos(file.getvalue().decode("utf-8"))
-
-                            if video_suggestions:
-
-                                st.markdown("### YouTube Video Suggestions:")
-
-                                for video in video_suggestions:
-                                    st.write(f"[{video['title']}]({video['url']})")
-
-                                    st.video(video["url"])
+                                    video_suggestions = fetch_youtube_videos(file_content)
+                                    if video_suggestions:
+                                        st.markdown("### YouTube Video Suggestions:")
+                                        for video in video_suggestions:
+                                            st.write(f"[{video['title']}]({video['url']})")
+                                            st.video(video["url"])
+                                else:
+                                    st.error("No valid response received from the AI model.")
+                                    st.write(f"Safety ratings: {response.safety_ratings}")
+                            except ValueError as e:
+                                    st.info(
+                                        f"😭  💔 I can't Assist you with that, try other prompts. It violates someones privacy or Out of my Knowledge. A ValueError occurred: {e}")
+                            except IndexError as e:
+                                st.info(
+                                    f"🤐 💔 I can't Assist you with that, try other prompts. It violates someones privacy or Out of my Knowledge. An IndexError occurred: {e}")
+                            except Exception as e:
+                                st.info(
+                                    f"🤐 I can't Assist you with that, try other prompts. It violates someones privacy or Out of my Knowledge. An unexpected error occurred: {e}")
 
             else:
-
                 st.error("Please provide a query or upload a file.")
                 st.markdown('---')
 
         display_footer()
-
 
 if __name__ == "__main__":
     main()
