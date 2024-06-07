@@ -59,14 +59,15 @@ def display_footer():
     <style>
     .footer {
         padding: 10px;
-        background-color: pink;
+        background-color: #f8f9fa;
         text-align: center;
         border-top: 1px solid #e1e1e1;
         font-family: 'Arial', sans-serif;
+        color: #6c757d;
     }
     </style>
     <div class="footer">
-        <p style="color: red;"><b>&copy; 2024 SKAV TECH. All rights reserved. | Follow us on <a href="https://bit.ly/socialinstag">Instagram</a></b></p>
+        <p><b>&copy; 2024 SKAV TECH. All rights reserved. | Follow us on <a href="https://bit.ly/socialinstag">Instagram</a></b></p>
     </div>
     """
     st.markdown(footer_html, unsafe_allow_html=True)
@@ -96,36 +97,33 @@ def fetch_youtube_videos(query):
                 "video_id": video_id
             })
     else:
-        st.error(f"Failed to fetch YouTube videos 😭. Status code: {response.status_code}")
+        st.error(f"Failed to fetch YouTube videos. Status code: {response.status_code}")
     return video_details
 
 # Function to extract the main topic from the prompt
 def extract_topic(prompt):
-    start_phrase = "@codex" or "codex" or "@autobot"
-    if prompt.lower().startswith(start_phrase):
-        topic = prompt[len(start_phrase):].strip()
-    else:
-        topic = prompt.strip()
-    return topic
+    start_phrases = ["@codex", "codex", "@autobot"]
+    for phrase in start_phrases:
+        if prompt.lower().startswith(phrase):
+            return prompt[len(phrase):].strip()
+    return prompt.strip()
 
 # Main Streamlit application
 def main():
-    st.set_page_config(page_title="AutoBot AI", page_icon="🤖", layout="wide")
+    st.set_page_config(page_title="AutoBot AI SaaS", page_icon="💀", layout="wide", initial_sidebar_state="expanded")
 
     st.sidebar.image("auto_bot_2.png", use_column_width=True)
-    page = st.sidebar.selectbox("Navigate",
-                                ["🏠 Home", "AutoBot 🤖", "CODEX ⚡", "Web Scrapper 🌐", "GitHub Codespaces 🖥️"])
+    page = st.sidebar.selectbox("Navigate", ["🏠 Home", "AutoBot 🤖", "CODEX ⚡", "Web Scrapper 🌐", "GitHub Codespaces 🖥️"])
 
-    st.sidebar.title("Donate")
-    st.sidebar.info("Support the Project.")
+    st.sidebar.title("Support Us")
+    st.sidebar.info("Your support helps us improve AutoBot AI.")
     st.sidebar.markdown("""
         <p>Donate for Knowledge, We will be doing this again ❤️</p>
         <a href="https://ibb.co/nBtGVnk"><img src="https://i.ibb.co/0Kv7WFJ/Google-Pay-QR.png" width="50"></a>
-        <p>Thank you for your support 😍️</p>
     """, unsafe_allow_html=True)
 
     if page == "🏠 Home":
-        st.title("Welcome to AutoBot 🤖")
+        st.title("Welcome to AutoBot AI 🤖")
         st.markdown("""
         **AutoBot AI**:
         **Functionalities:**
@@ -144,29 +142,27 @@ def main():
     elif page == "AutoBot 🤖":
         st.image("auto_bot_2.png")
         st.header("AutoBot 🤖")
-        st.markdown(
-            "AutoBot is effective for code generation. If your prompt contains code generation **-prompt-**, you can get downloadable files.")
+        st.markdown("AutoBot is effective for code generation. If your prompt contains code generation **-prompt-**, you can get downloadable files.")
 
         question = st.text_input("Ask the model a question:")
         if st.button("Ask AI"):
-            with st.spinner("Generating response 😉😗..."):
+            with st.spinner("Generating response..."):
                 try:
                     response = model.generate_content(question)
                     if response.text:
                         st.text("AutoBot Response:")
                         st.write(response.text)
                         st.markdown('---')
-                        st.markdown(
-                            "Security Note: We use **.txt** file format for code downloads, which is not easily susceptible to virus and malware attacks.")
+                        st.markdown("Security Note: We use **.txt** file format for code downloads, which is not easily susceptible to virus and malware attacks.")
                     else:
                         st.error("No valid response received from the AI model.")
                         st.write(f"Safety ratings: {response.safety_ratings}")
                 except ValueError as e:
-                            st.info(f"😭  💔 I can't Assist you with that, try other prompts. It violates someones privacy or Out of my Knowledge. A ValueError occurred: {e}")
+                    st.info(f"Unable to assist with that prompt due to: {e}")
                 except IndexError as e:
-                            st.info(f"🤐 💔 I can't Assist you with that, try other prompts. It violates someones privacy or Out of my Knowledge. An IndexError occurred: {e}")
+                    st.info(f"Unable to assist with that prompt due to: {e}")
                 except Exception as e:
-                            st.info(f"🤐 I can't Assist you with that, try other prompts. It violates someones privacy or Out of my Knowledge. An unexpected error occurred: {e}")
+                    st.info(f"An unexpected error occurred: {e}")
 
                 code_keywords = ["code", "write code", "develop code", "generate code", "generate", "build"]
                 if any(keyword in question.lower() for keyword in code_keywords):
@@ -177,17 +173,16 @@ def main():
 
     elif page == "GitHub Codespaces 🖥️":
         st.header("GitHub Codespaces 🖥️")
-        st.markdown("Application will start in 10 sec. 😀")
+        st.markdown("Application will start in 10 seconds...")
         redirect_to_codespaces()
         display_footer()
 
     elif page == "Web Scrapper 🌐":
         st.header("Web Scrapper 🌐")
-        st.markdown(
-            "AutoBot powered **Web Scrapper**. This tool will get the code of any website. Simply enter the URL below. Download Extracted Code.")
+        st.markdown("AutoBot powered **Web Scrapper**. This tool will get the code of any website. Simply enter the URL below. Download Extracted Code.")
         url = st.text_input("Enter URL:")
         if st.button("Extract HTML Code"):
-            with st.spinner("Extracting HTML code 🤓..."):
+            with st.spinner("Extracting HTML code..."):
                 try:
                     response = requests.get(url)
                     if response.status_code == 200:
@@ -195,20 +190,17 @@ def main():
                         download_html_code(extracted_html, url)
                         st.balloons()
                     else:
-                        st.info(f"😖 Failed to retrieve HTML content. Status code: {response.status_code}")
+                        st.info(f"Failed to retrieve HTML content. Status code: {response.status_code}")
                 except Exception as e:
-                    st.info(f"🧐 Check the URL and Try agian. If same problem faces use different URL. An error occurred: {e}")
+                    st.info(f"An error occurred: {e}")
 
         display_footer()
 
     elif page == "CODEX ⚡":
-
         st.header("CODEX ⚡️")
-
         uploaded_files = st.file_uploader("Upload code files:", accept_multiple_files=True)
 
         st.markdown("""
-
             Welcome to **CODEX**
 
             Interactive CODING GUIDE, No one can explain Code like me trust me.
@@ -218,35 +210,28 @@ def main():
             **If you face ValueError or Type Error, Try changing the Prompt, This is may be because of Gemini API restrictions**
 
             1. You can ask specific code or content using the phrase @codex "prompt".
-
             2. You can upload your code here to ask the CODEX to generate an explanation (for example: @codex Can you explain me this code in the file "filename").
-
             3. I can generate 60 queries per minute. Pretty wild right? Haha, more to see and explore.
-
         """)
 
-        st.info("""Example prompt: @codex explain me the code in the file "your_file_name"
+        st.info("""
+            Example prompt: @codex explain me the code in the file "your_file_name"
 
-
-        Some popular prompts:
-
-        1. @codex explain me the code in the file app.py
-
-        2. @codex how does this code work in the file app.py
-
-        3. @codex can you explain me this code: "paste your code"
-
+            Some popular prompts:
+            1. @codex explain me the code in the file app.py
+            2. @codex how does this code work in the file app.py
+            3. @codex can you explain me this code: "paste your code"
         """)
 
         st.warning("Use @codex phrase to start the prompt")
 
         prompt = st.text_area('Type your query here:', height=100)
-        st.markdown(' **If you face Problem in Generating your Query, Try changing the Prompt, This is may be because of Gemini API restrictions**')
+        st.markdown('If you face Problem in Generating your Query, Try changing the Prompt, This is may be because of Gemini API restrictions')
         if st.button('Submit'):
             st.markdown('---')
 
             if prompt or uploaded_files:
-                with st.spinner("Processing 🧐..."):
+                with st.spinner("Processing..."):
 
                     if prompt:
                         try:
@@ -267,17 +252,17 @@ def main():
                                 st.error("No valid response received from the AI model.")
                                 st.write(f"Safety ratings: {response.safety_ratings}")
                         except ValueError as e:
-                            st.info(f"😭  💔 I can't Assist you with that, try other prompts. It violates someones privacy or Out of my Knowledge. A ValueError occurred: {e}")
+                            st.info(f"Unable to assist with that prompt due to: {e}")
                         except IndexError as e:
-                            st.info(f"🤐 💔 I can't Assist you with that, try other prompts. It violates someones privacy or Out of my Knowledge. An IndexError occurred: {e}")
+                            st.info(f"Unable to assist with that prompt due to: {e}")
                         except Exception as e:
-                            st.info(f"🤐 I can't Assist you with that, try other prompts. It violates someones privacy or Out of my Knowledge. An unexpected error occurred: {e}")
+                            st.info(f"An unexpected error occurred: {e}")
 
                     if uploaded_files:
                         for file in uploaded_files:
                             st.write(f"Code for {file.name}:")
                             file_content = file.getvalue().decode("utf-8")
-                            st.code(file_content)  # Display file content as code
+                            st.code(file_content)
 
                             try:
                                 response = model.generate_content(file_content)
@@ -295,14 +280,11 @@ def main():
                                     st.error("No valid response received from the AI model.")
                                     st.write(f"Safety ratings: {response.safety_ratings}")
                             except ValueError as e:
-                                    st.info(
-                                        f"😭  💔 I can't Assist you with that, try other prompts. It violates someones privacy or Out of my Knowledge. A ValueError occurred: {e}")
+                                st.info(f"Unable to assist with that prompt due to: {e}")
                             except IndexError as e:
-                                st.info(
-                                    f"🤐 💔 I can't Assist you with that, try other prompts. It violates someones privacy or Out of my Knowledge. An IndexError occurred: {e}")
+                                st.info(f"Unable to assist with that prompt due to: {e}")
                             except Exception as e:
-                                st.info(
-                                    f"🤐 I can't Assist you with that, try other prompts. It violates someones privacy or Out of my Knowledge. An unexpected error occurred: {e}")
+                                st.info(f"An unexpected error occurred: {e}")
 
             else:
                 st.error("Please provide a query or upload a file.")
