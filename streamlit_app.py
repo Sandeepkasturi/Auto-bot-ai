@@ -123,7 +123,7 @@ def main():
     """, unsafe_allow_html=True)
 
     if page == "🏠 Home":
-        st.title("Welcome to AutoBot AI 🤖")
+        st.title("Welcome to AutoBot AI 💀")
         st.markdown("""
         **AutoBot AI**:
         **Functionalities:**
