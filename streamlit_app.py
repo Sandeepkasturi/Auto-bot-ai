@@ -113,7 +113,7 @@ def main():
     st.set_page_config(page_title="AutoBot AI", page_icon="💀", layout="wide", initial_sidebar_state="expanded")
 
     st.sidebar.image("auto_bot_2.png", use_column_width=True)
-    page = st.sidebar.selectbox("Navigate", ["🏠 Home", "AutoBot 🤖", "CODEX ⚡", "Web Scrapper 🌐", "GitHub Codespaces 🖥️"])
+    page = st.sidebar.selectbox("::Menu::", ["🏠 Home", "AutoBot 💀", "CODEX ⚡", "Web Scrapper 🌐", "GitHub Codespaces 🖥️"])
 
     st.sidebar.title("Support Us")
     st.sidebar.info("Your support helps us improve AutoBot AI.")
