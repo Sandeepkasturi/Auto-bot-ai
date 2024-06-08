@@ -139,14 +139,14 @@ def main():
         st.video("https://youtu.be/i0Q-NBrYpPI", start_time=0)
         display_footer()
 
-    elif page == "AutoBot 🤖":
+    elif page == "AutoBot 💀":
         st.image("auto_bot_2.png")
-        st.header("AutoBot 🤖")
+        st.header("AutoBot 💀")
         st.markdown("AutoBot is effective for code generation. If your prompt contains code generation **-prompt-**, you can get downloadable files.")
 
         question = st.text_input("Ask the model a question:")
         if st.button("Ask AI"):
-            with st.spinner("Generating response..."):
+            with st.spinner("Generating response 💀..."):
                 try:
                     response = model.generate_content(question)
                     if response.text:
@@ -182,7 +182,7 @@ def main():
         st.markdown("AutoBot powered **Web Scrapper**. This tool will get the code of any website. Simply enter the URL below. Download Extracted Code.")
         url = st.text_input("Enter URL:")
         if st.button("Extract HTML Code"):
-            with st.spinner("Extracting HTML code..."):
+            with st.spinner("Extracting HTML code 🫨..."):
                 try:
                     response = requests.get(url)
                     if response.status_code == 200:
