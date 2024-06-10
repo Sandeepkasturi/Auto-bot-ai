@@ -6,12 +6,22 @@ import time
 import base64
 from google.generativeai import configure, GenerativeModel
 from urllib.parse import urlparse
+import json
+from streamlit_lottie import st_lottie
+
 
 # Set up the Generative AI configuration with a placeholder API key
 configure(api_key=st.secrets["api_key"])
 
 # Create a Generative Model instance (assuming 'gemini-pro' is a valid model)
 model = GenerativeModel('gemini-pro')
+
+# Lottie animation
+def load_lottie_url(url: str):
+    response = requests.get(url)
+    if response.status_code != 200:
+        return None
+    return response.json()
 
 # Function to download HTML code
 def download_html_code(html_content, url):
@@ -136,6 +146,13 @@ def main():
 
         Developed by SKAV TECH, a company focused on creating practical AI projects, AutoBot is intended for educational purposes only. We do not endorse any illegal or unethical activities.
         """)
+
+        # Embedding Lottie animation
+        st.markdown("""
+        <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+        <lottie-player src="https://lottie.host/ee1e5978-9014-47cb-8031-45874d2dc909/tXASIvRMrN.json" background="#FFFFFF" speed="1" style="width: 300px; height: 300px" loop controls autoplay direction="1" mode="normal"></lottie-player>
+        """, unsafe_allow_html=True)
+
         st.video("https://youtu.be/i0Q-NBrYpPI", start_time=0)
         display_footer()
 
@@ -145,7 +162,17 @@ def main():
         st.markdown("AutoBot is effective for code generation. If your prompt contains code generation **-prompt-**, you can get downloadable files.")
 
         question = st.text_input("Ask the model a question:")
+
         if st.button("Ask AI"):
+
+            lottie_url = "https://lottie.host/fb24aa71-e6dd-497e-8a6c-3098cb64b1ed/V9N1Sd3klS.json"
+
+            # Load and display Lottie animation
+            lottie_animation = load_lottie_url(lottie_url)
+            if lottie_animation:
+                st_lottie(lottie_animation, speed=27, width=150, height=100, key="lottie_animation")
+            else:
+                st.error("Failed to load Lottie animation.")
             with st.spinner("Generating response 💀..."):
                 try:
                     response = model.generate_content(question)
@@ -174,15 +201,35 @@ def main():
     elif page == "GitHub Codespaces 🖥️":
         st.header("GitHub Codespaces 🖥️")
         st.markdown("Application will start in 10 seconds...")
+        lottie_url = "https://lottie.host/1b47b231-3f17-4e3c-920f-25d73c2570d5/YFkJCSv0nf.json"
+
+        # Load and display Lottie animation
+        lottie_animation = load_lottie_url(lottie_url)
+        if lottie_animation:
+            st_lottie(lottie_animation, speed=1, width=300, height=300, key="lottie_animation")
+        else:
+            st.error("Failed to load Lottie animation.")
+
         redirect_to_codespaces()
         display_footer()
 
-    elif page == "Web Scrapper 🌐":
+    elif  page == "Web Scrapper 🌐":
         st.header("Web Scrapper 🌐")
         st.markdown("AutoBot powered **Web Scrapper**. This tool will get the code of any website. Simply enter the URL below. Download Extracted Code.")
         url = st.text_input("Enter URL:")
         if st.button("Extract HTML Code"):
+
             with st.spinner("Extracting HTML code 🫨..."):
+
+                lottie_url = "https://lottie.host/ee1e5978-9014-47cb-8031-45874d2dc909/tXASIvRMrN.json"
+
+                # Load and display Lottie animation
+                lottie_animation = load_lottie_url(lottie_url)
+                if lottie_animation:
+                    st_lottie(lottie_animation, speed=1, width=300, height=300, key="lottie_animation")
+                else:
+                    st.error("Failed to load Lottie animation.")
+
                 try:
                     response = requests.get(url)
                     if response.status_code == 200:
@@ -193,7 +240,6 @@ def main():
                         st.info(f"Failed to retrieve HTML content. Status code: {response.status_code}")
                 except Exception as e:
                     st.info(f"An error occurred: {e}")
-
         display_footer()
 
     elif page == "CODEX ⚡":
