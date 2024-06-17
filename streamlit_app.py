@@ -123,7 +123,7 @@ def main():
     st.set_page_config(page_title="AutoBot AI", page_icon="💀", layout="wide", initial_sidebar_state="expanded")
 
     st.sidebar.image("auto_bot_2.png", use_column_width=True)
-    page = st.sidebar.selectbox("::Menu::", ["🏠 Home", "AutoBot 💀", "CODEX ⚡", "Web Scrapper 🌐", "GitHub Codespaces 🖥️"])
+    page = st.sidebar.selectbox("::Menu::", ["🏠 Home", "AutoBot 💀", "CODEX ⚡", "Web Scrapper 🌐", "GitHub Codespaces 🖥️", "Refund & Privacy Policy 💸"])
 
     st.sidebar.title("Support Us")
     st.sidebar.info("Your support helps us improve AutoBot AI.")
@@ -336,6 +336,49 @@ def main():
                 st.error("Please provide a query or upload a file.")
                 st.markdown('---')
 
+        display_footer()
+    
+    elif page == "Refund & Privacy Policy 💸":
+        st.markdown("""
+
+### Privacy Policy:
+
+**1. Collection of Information:**
+We may collect personal information such as name, email address, and other contact details when you interact with our services. We may also collect non-personal information such as device information, browser type, and IP address for analytics purposes.
+
+**2. Use of Information:**
+We use the information collected to provide and improve our services, communicate with you, and personalize your experience. We do not sell or share your personal information with third parties without your consent, except as required by law.
+
+**3. Security:**
+We take reasonable measures to protect your personal information from unauthorized access, use, or disclosure. However, no method of transmission over the internet or electronic storage is 100% secure, and we cannot guarantee absolute security.
+
+**4. Cookies:**
+We may use cookies and similar technologies to collect information and improve our services. You can choose to disable cookies in your browser settings, but this may affect the functionality of our services.
+
+**5. Third-Party Links:**
+Our services may contain links to third-party websites or services. We are not responsible for the privacy practices or content of these third parties. We encourage you to review the privacy policies of these third parties.
+
+**6. Changes to Privacy Policy:**
+We reserve the right to update or change our privacy policy at any time. Any changes will be effective immediately upon posting on this page.
+
+**Refund Policy:**
+
+**1. Refund Eligibility:**
+Refunds may be requested within [X days/weeks/months] of purchase for any reason. To be eligible for a refund, you must provide proof of purchase and meet any additional requirements specified in our refund policy.
+
+**2. Refund Process:**
+To request a refund, please contact us at [contact email/phone number]. We will review your request and respond as soon as possible. If your refund is approved, it will be processed using the original payment method.
+
+**3. Non-Refundable Items:**
+Certain items may not be eligible for a refund, such as digital products that have been downloaded or used, or services that have been completed.
+
+**4. Refund Exceptions:**
+We reserve the right to refuse refunds in cases of suspected abuse or fraud, or if the refund request does not meet our refund policy criteria.
+
+**5. Contact Us:**
+If you have any questions or concerns about our privacy policy or refund policy, please contact us at [contact skavtech.in@gmail.com].
+
+This is a basic template and should be customized to fit the specific details and requirements of your project. It's also important to consult with legal professionals to ensure compliance with relevant laws and regulations.""")
         display_footer()
 
 if __name__ == "__main__":
