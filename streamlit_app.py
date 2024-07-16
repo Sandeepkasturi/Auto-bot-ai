@@ -299,7 +299,22 @@ def main():
         code_animation = load_lottie_url("https://assets5.lottiefiles.com/packages/lf20_ba55esn2.json")
         image_animation = load_lottie_url("https://assets2.lottiefiles.com/private_files/lf30_O5QGL0.json")
 
-        https://autobots.streamlit.app/~/+/media/6fccba9d58db2500bc016561cb7ed354b3f7bb72e1c9b102ac98cef4.png
+        # General Chat Tab
+        with tabs[0]:
+            st.header("💬 General Chat")
+            user_prompt = st.text_input("Enter your prompt:", "")
+            if st.button("Generate Response"):
+                with st.spinner("Generating response..."):
+                    response = model.generate_content(user_prompt)
+                    st.markdown('---')
+                    st.write(response.text)
+                    st.markdown('---')
+            st.sidebar.write("""
+                **General Chat Instructions:**
+                1. Enter your prompt in the text box.
+                2. Click on the 'Generate Response' button to see the AI's response.
+            """)
+
         # Code Generation Tab
         with tabs[1]:
             st.header("💻 Code Generation")
