@@ -1,22 +1,21 @@
+import os
 import streamlit as st
 import requests
 import webbrowser
-import os
 import time
 import base64
 from google.generativeai import configure, GenerativeModel
 from urllib.parse import urlparse
-import json
 from streamlit_lottie import st_lottie
+from together import Together
 
-
-# Set up the Generative AI configuration with a placeholder API key
+# Configure the Generative AI and Together clients
 configure(api_key=st.secrets["api_key"])
-
-# Create a Generative Model instance (assuming 'gemini-pro' is a valid model)
 model = GenerativeModel('gemini-pro')
+together_api_key = st.secrets["together_api_key"]
+client = Together(api_key=together_api_key)
 
-# Lottie animation
+# Lottie animation loader
 def load_lottie_url(url: str):
     response = requests.get(url)
     if response.status_code != 200:
@@ -122,8 +121,10 @@ def extract_topic(prompt):
 def main():
     st.set_page_config(page_title="AutoBot AI", page_icon="💀", layout="wide", initial_sidebar_state="expanded")
 
-    st.sidebar.image("auto_bot_2.png", use_column_width=True)
-    page = st.sidebar.selectbox("**MENU**", ["🏠 Home", "AutoBot 💀", "CODEX ⚡", "Web Scrapper 🌐", "GitHub Codespaces 🖥️", "Refund & Privacy Policy 💸"])
+    st.sidebar.image("autobot2.png", use_column_width=True)
+    page = st.sidebar.selectbox("**MENU**",
+                                ["🏠 Home", "AutoBot 💀", "CODEX ⚡", "Web Scrapper 🌐", "GitHub Codespaces 🖥️",
+                                 "Mega Bot 🐸", "Refund & Privacy Policy 💸",])
 
     st.sidebar.title("Support Us")
     st.sidebar.info("Your support helps us improve AutoBot AI.")
@@ -157,9 +158,10 @@ def main():
         display_footer()
 
     elif page == "AutoBot 💀":
-        st.image("auto_bot_2.png")
+        st.image("autobot2.png")
         st.header("AutoBot 💀")
-        st.markdown("AutoBot is effective for code generation. If your prompt contains code generation **-prompt-**, you can get downloadable files.")
+        st.markdown(
+            "AutoBot is effective for code generation. If your prompt contains code generation **-prompt-**, you can get downloadable files.")
 
         question = st.text_input("Ask the model a question:")
 
@@ -180,7 +182,8 @@ def main():
                         st.text("AutoBot Response:")
                         st.write(response.text)
                         st.markdown('---')
-                        st.markdown("Security Note: We use **.txt** file format for code downloads, which is not easily susceptible to virus and malware attacks.")
+                        st.markdown(
+                            "Security Note: We use **.txt** file format for code downloads, which is not easily susceptible to virus and malware attacks.")
                     else:
                         st.error("No valid response received from the AI model.")
                         st.write(f"Safety ratings: {response.safety_ratings}")
@@ -193,192 +196,175 @@ def main():
 
                 code_keywords = ["code", "write code", "develop code", "generate code", "generate", "build"]
                 if any(keyword in question.lower() for keyword in code_keywords):
-                    if response.text:
-                        download_generated_code(response.text, "generated_code")
-        st.markdown('---')
-        display_footer()
+                    st.text("Download the generated code 💀:")
+                    download_generated_code(response.text, "code", format='txt')
 
-    elif page == "GitHub Codespaces 🖥️":
-        st.header("GitHub Codespaces 🖥️")
-        st.markdown("Application will start in 10 seconds...")
-        lottie_url = "https://lottie.host/1b47b231-3f17-4e3c-920f-25d73c2570d5/YFkJCSv0nf.json"
-
-        # Load and display Lottie animation
-        lottie_animation = load_lottie_url(lottie_url)
-        if lottie_animation:
-            st_lottie(lottie_animation, speed=1, width=300, height=300, key="lottie_animation")
-        else:
-            st.error("Failed to load Lottie animation.")
-
-        redirect_to_codespaces()
-        display_footer()
-
-    elif  page == "Web Scrapper 🌐":
-        st.header("Web Scrapper 🌐")
-        st.markdown("AutoBot powered **Web Scrapper**. This tool will get the code of any website. Simply enter the URL below. Download Extracted Code.")
-        url = st.text_input("Enter URL:")
-        if st.button("Extract HTML Code"):
-
-            with st.spinner("Extracting HTML code 🫨..."):
-
-                lottie_url = "https://lottie.host/ee1e5978-9014-47cb-8031-45874d2dc909/tXASIvRMrN.json"
-
-                # Load and display Lottie animation
-                lottie_animation = load_lottie_url(lottie_url)
-                if lottie_animation:
-                    st_lottie(lottie_animation, speed=1, width=300, height=300, key="lottie_animation")
-                else:
-                    st.error("Failed to load Lottie animation.")
-
-                try:
-                    response = requests.get(url)
-                    if response.status_code == 200:
-                        extracted_html = response.text
-                        download_html_code(extracted_html, url)
-                        st.balloons()
-                    else:
-                        st.info(f"Failed to retrieve HTML content. Status code: {response.status_code}")
-                except Exception as e:
-                    st.info(f"An error occurred: {e}")
         display_footer()
 
     elif page == "CODEX ⚡":
-        st.header("CODEX ⚡️")
-        uploaded_files = st.file_uploader("Upload code files:", accept_multiple_files=True)
+        st.image("codex.png")
+        st.header("CODEX ⚡")
+        st.markdown(
+            "The CODEX tool is effective for code generation and provides YouTube video suggestions based on your code-related queries.")
 
-        st.markdown("""
-            Welcome to **CODEX**
+        question = st.text_input("Ask the model for code generation:")
 
-            Interactive CODING GUIDE, No one can explain Code like me trust me.
+        if st.button("Generate Code"):
+            with st.spinner("Generating code..."):
+                try:
+                    response = model.generate_content(question)
+                    if response.text:
+                        st.text("CODEX Response:")
+                        st.write(response.text)
+                        download_generated_code(response.text, "code", format='txt')
+                    else:
+                        st.error("No valid response received from the AI model.")
+                except ValueError as e:
+                    st.info(f"Unable to assist with that prompt due to: {e}")
+                except IndexError as e:
+                    st.info(f"Unable to assist with that prompt due to: {e}")
+                except Exception as e:
+                    st.info(f"An unexpected error occurred: {e}")
 
-            CODEX is one way fun Feature, You can get Youtube Suggestion based on your Queries.
+        topic = extract_topic(question)
+        video_results = fetch_youtube_videos(topic)
 
-            **If you face ValueError or Type Error, Try changing the Prompt, This is may be because of Gemini API restrictions**
-
-            1. You can ask specific code or content using the phrase @codex "prompt".
-            2. You can upload your code here to ask the CODEX to generate an explanation (for example: @codex Can you explain me this code in the file "filename").
-            3. I can generate 60 queries per minute. Pretty wild right? Haha, more to see and explore.
-        """)
-
-        st.info("""
-            Example prompt: @codex explain me the code in the file "your_file_name"
-
-            Some popular prompts:
-            1. @codex explain me the code in the file app.py
-            2. @codex how does this code work in the file app.py
-            3. @codex can you explain me this code: "paste your code"
-        """)
-
-        st.warning("Use @codex phrase to start the prompt")
-
-        prompt = st.text_area('Type your query here:', height=100)
-        st.markdown('If you face Problem in Generating your Query, Try changing the Prompt, This is may be because of Gemini API restrictions')
-        if st.button('Submit'):
-            st.markdown('---')
-
-            if prompt or uploaded_files:
-                with st.spinner("Processing..."):
-
-                    if prompt:
-                        try:
-                            response = model.generate_content(prompt)
-                            if response.text:
-                                st.write("CODEX Response:")
-                                st.write(response.text)
-
-                                topic = extract_topic(prompt)
-                                video_suggestions = fetch_youtube_videos(topic)
-
-                                if video_suggestions:
-                                    st.markdown("### YouTube Video Suggestions:")
-                                    for video in video_suggestions:
-                                        st.write(f"[{video['title']}]({video['url']})")
-                                        st.video(video["url"])
-                            else:
-                                st.error("No valid response received from the AI model.")
-                                st.write(f"Safety ratings: {response.safety_ratings}")
-                        except ValueError as e:
-                            st.info(f"Unable to assist with that prompt due to: {e}")
-                        except IndexError as e:
-                            st.info(f"Unable to assist with that prompt due to: {e}")
-                        except Exception as e:
-                            st.info(f"An unexpected error occurred: {e}")
-
-                    if uploaded_files:
-                        for file in uploaded_files:
-                            st.write(f"Code for {file.name}:")
-                            file_content = file.getvalue().decode("utf-8")
-                            st.code(file_content)
-
-                            try:
-                                response = model.generate_content(file_content)
-                                if response.text:
-                                    st.write("CODEX Response:")
-                                    st.write(response.text)
-
-                                    video_suggestions = fetch_youtube_videos(file_content)
-                                    if video_suggestions:
-                                        st.markdown("### YouTube Video Suggestions:")
-                                        for video in video_suggestions:
-                                            st.write(f"[{video['title']}]({video['url']})")
-                                            st.video(video["url"])
-                                else:
-                                    st.error("No valid response received from the AI model.")
-                                    st.write(f"Safety ratings: {response.safety_ratings}")
-                            except ValueError as e:
-                                st.info(f"Unable to assist with that prompt due to: {e}")
-                            except IndexError as e:
-                                st.info(f"Unable to assist with that prompt due to: {e}")
-                            except Exception as e:
-                                st.info(f"An unexpected error occurred: {e}")
-
-            else:
-                st.error("Please provide a query or upload a file.")
-                st.markdown('---')
+        if video_results:
+            st.subheader("YouTube Video Suggestions")
+            for video in video_results:
+                st.markdown(f"[{video['title']}]({video['url']})")
+                st.video(video['url'])
+        else:
+            st.info("No relevant YouTube videos found.")
 
         display_footer()
-    
+
+    elif page == "Web Scrapper 🌐":
+        st.image("autobot2.png")
+        st.header("Web Scrapper 🌐")
+
+        url = st.text_input("Enter URL to scrape:")
+        if st.button("Scrape HTML Code"):
+            if url:
+                with st.spinner("Scraping HTML code..."):
+                    try:
+                        response = requests.get(url)
+                        response.raise_for_status()
+                        html_content = response.text
+                        st.code(html_content, language="html")
+                        download_html_code(html_content, url)
+                    except requests.exceptions.RequestException as e:
+                        st.error(f"Failed to scrape HTML code: {e}")
+            else:
+                st.error("Please enter a valid URL.")
+
+        display_footer()
+
+    elif page == "GitHub Codespaces 🖥️":
+        st.image("autobot2.png")
+        st.header("GitHub Codespaces 🖥️")
+
+        if st.button("Open GitHub Codespaces"):
+            redirect_to_codespaces()
+
+        display_footer()
+
     elif page == "Refund & Privacy Policy 💸":
-        st.markdown("""
+        st.image("autobot2.png")
+        st.header("Refund & Privacy Policy 💸")
+        st.markdown(
+            """
+            ## Refund Policy
+            We want you to be satisfied with our services. If you have any issues or concerns, please contact us within 30 days of purchase. We will review your request and provide a refund if deemed appropriate.
 
-### Privacy Policy:
+            ## Privacy Policy
+            Your privacy is important to us. We collect only the necessary data to provide our services and do not share your information with third parties without your consent. Please review our [full privacy policy](https://www.example.com/privacy-policy) for more details.
+            """
+        )
 
-**1. Collection of Information:**
-We may collect personal information such as name, email address, and other contact details when you interact with our services. We may also collect non-personal information such as device information, browser type, and IP address for analytics purposes.
+        display_footer()
 
-**2. Use of Information:**
-We use the information collected to provide and improve our services, communicate with you, and personalize your experience. We do not sell or share your personal information with third parties without your consent, except as required by law.
 
-**3. Security:**
-We take reasonable measures to protect your personal information from unauthorized access, use, or disclosure. However, no method of transmission over the internet or electronic storage is 100% secure, and we cannot guarantee absolute security.
+    elif page == "Mega Bot 🐸":
+        st.image("megabot.png")
+        st.markdown('---')
+        st.subheader("🤖 Multi-model AI Application")
+        st.markdown(
+            "This application integrates multiple AI models and tools for various functionalities such as chat, code generation, image generation.")
 
-**4. Cookies:**
-We may use cookies and similar technologies to collect information and improve our services. You can choose to disable cookies in your browser settings, but this may affect the functionality of our services.
+        # Tabs for navigation
+        tabs = st.tabs(["General Chat", "Code Generation", "Image Generation"])
+        # Load animations
+        chat_animation = load_lottie_url("https://assets2.lottiefiles.com/private_files/lf30_xTmPwn.json")
+        code_animation = load_lottie_url("https://assets5.lottiefiles.com/packages/lf20_ba55esn2.json")
+        image_animation = load_lottie_url("https://assets2.lottiefiles.com/private_files/lf30_O5QGL0.json")
 
-**5. Third-Party Links:**
-Our services may contain links to third-party websites or services. We are not responsible for the privacy practices or content of these third parties. We encourage you to review the privacy policies of these third parties.
+        # General Chat Tab
+        with tabs[0]:
+            st.header("💬 General Chat")
+            user_prompt = st.text_input("Enter your prompt:", "")
+            if st.button("Generate Response"):
+                with st.spinner("Generating response..."):
+                    response = client.completions.create(
+                        model="meta-llama/Llama-3-8b-hf",
+                        prompt=user_prompt
+                    )
+                    st.write(response.choices[0].text)
+            st.sidebar.write("""
+                **General Chat Instructions:**
+                1. Enter your prompt in the text box.
+                2. Click on the 'Generate Response' button to see the AI's response.
+            """)
 
-**6. Changes to Privacy Policy:**
-We reserve the right to update or change our privacy policy at any time. Any changes will be effective immediately upon posting on this page.
+        # Code Generation Tab
+        with tabs[1]:
+            st.header("💻 Code Generation")
+            user_prompt = st.text_input("Enter your coding prompt:", "")
+            if st.button("Generate Code"):
+                with st.spinner("Generating code..."):
+                    response = client.chat.completions.create(
+                        model="codellama/CodeLlama-70b-Instruct-hf",
+                        messages=[{"role": "user", "content": user_prompt}],
+                    )
+                    st.code(response.choices[0].message.content, language="python")
+            st.sidebar.write("""
+                **Code Generation Instructions:**
+                1. Enter your coding prompt in the text box.
+                2. Click on the 'Generate Code' button to see the generated code.
+            """)
 
-**Refund Policy:**
+        # Image Generation Tab
+        with tabs[2]:
+            st.header("🖼️ Image Generation")
+            st.markdown('---')
+            st.info("We are currently working on Tuning the Models, So the AI generated images might not match your prompts. Improve your Prompt Context to get good results 😊")
+            st.markdown('---')
+            user_prompt = st.text_input("Enter your image prompt:", "")
+            model_choice = st.selectbox("Choose the image model", [
+                "stabilityai/stable-diffusion-2-1",
+                "runwayml/stable-diffusion-v1-5",
+                "prompthero/openjourney"
+            ])
+            if st.button("Generate Image"):
+                with st.spinner("Generating image..."):
+                    response = client.images.generate(
+                        prompt=user_prompt,
+                        model=model_choice,
+                        steps=10,
+                        n=1
+                    )
+                    img_data = response.data[0].b64_json
+                    img_bytes = base64.b64decode(img_data)
+                    st.image(img_bytes)
+            st.sidebar.write("""
+                **Image Generation Instructions:**
+                1. Enter your image prompt in the text box.
+                2. Choose an image generation model from the dropdown.
+                3. Click on the 'Generate Image' button to see the generated image.
+            """)
 
-**1. Refund Eligibility:**
-Refunds may be requested within [X days/weeks/months] of purchase for any reason. To be eligible for a refund, you must provide proof of purchase and meet any additional requirements specified in our refund policy.
+        # Run the app with: streamlit run app.py
 
-**2. Refund Process:**
-To request a refund, please contact us at [contact email/phone number]. We will review your request and respond as soon as possible. If your refund is approved, it will be processed using the original payment method.
-
-**3. Non-Refundable Items:**
-Certain items may not be eligible for a refund, such as digital products that have been downloaded or used, or services that have been completed.
-
-**4. Refund Exceptions:**
-We reserve the right to refuse refunds in cases of suspected abuse or fraud, or if the refund request does not meet our refund policy criteria.
-
-**5. Contact Us:**
-If you have any questions or concerns about our privacy policy or refund policy, please contact us at [contact skavtech.in@gmail.com].
-
-This is a basic template and should be customized to fit the specific details and requirements of your project. It's also important to consult with legal professionals to ensure compliance with relevant laws and regulations.""")
         display_footer()
 
 if __name__ == "__main__":
