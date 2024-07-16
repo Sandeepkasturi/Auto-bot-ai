@@ -340,6 +340,7 @@ def main():
             st.markdown('---')
             user_prompt = st.text_input("Enter your image prompt:", "")
             model_choice = st.selectbox("Choose the image model", [
+                "SG161222/Realistic_Vision_V3.0_VAE",
                 "stabilityai/stable-diffusion-2-1",
                 "runwayml/stable-diffusion-v1-5",
                 "prompthero/openjourney"
