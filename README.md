@@ -1,5 +1,5 @@
 
-![Logo](https://autobots.streamlit.app/~/+/media/2f6b76f3b4cc82dee9f5efe6f5672a9cc7639a9acbfaecdaf0737800.png)
+![Logo]([https://](https://autobots.streamlit.app/~/+/media/6fccba9d58db2500bc016561cb7ed354b3f7bb72e1c9b102ac98cef4.png))
 
 **Welcome to AutoBot 🤖**
 
@@ -16,6 +16,8 @@ Interactive Chatbot build with Python Streamlit, Leveraging Gemini-pro API to th
 **Web Scrapper**
 
 **Github Codespaces**
+
+**Mega Bot**
 
 AutoBot, powered by the Gemini API, is a basic chatbot designed for automation. It excels in writing code and generating downloadable files with a .txt extension, offering the ability to handle up to 60 queries per minute.
 
@@ -51,7 +53,8 @@ A tool that is build with Python, this gathers the contents of Websites using re
 4. **Github Codespaces**
    Providing the time to the user not to open VS code on Windows, while we provide an Web interaction to Vs code through Github Codespaces.
 
-
+5. **Mega Bot**
+   Multi Model capability at finger tips.
 
 Steps to install and Run AutoBot:
 **STEP-1:**
