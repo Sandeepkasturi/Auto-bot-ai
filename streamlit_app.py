@@ -75,6 +75,9 @@ def display_footer():
         color: #6c757d;
     }
     </style>
+    <body>
+        <script src="//code.tidio.co/pwcadzxfjcnszjctpvlutoucjowgrrrw.js" async></script>
+        </body>
     <div class="footer">
         <p><b>&copy; 2024 SKAV TECH. All rights reserved. | Follow us on <a href="https://bit.ly/socialinstag">Instagram</a></b></p>
     </div>
@@ -131,9 +134,6 @@ def main():
     st.sidebar.markdown("""
         <p>Donate for Knowledge, We will be doing this again ❤️</p>
         <a href="https://ibb.co/nBtGVnk"><img src="https://i.ibb.co/0Kv7WFJ/Google-Pay-QR.png" width="50"></a>
-       <body>
-        <script src="//code.tidio.co/pwcadzxfjcnszjctpvlutoucjowgrrrw.js" async></script>
-        </body>
     """, unsafe_allow_html=True)
 
     if page == "🏠 Home":
