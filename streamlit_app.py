@@ -76,6 +76,7 @@ def display_footer():
     }
     </style>
     <div class="footer">
+    <script src="//code.tidio.co/pwcadzxfjcnszjctpvlutoucjowgrrrw.js" async></script>
         <p><b>&copy; 2024 SKAV TECH. All rights reserved. | Follow us on <a href="https://bit.ly/socialinstag">Instagram</a></b></p>
     </div>
     """
