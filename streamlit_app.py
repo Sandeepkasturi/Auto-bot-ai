@@ -132,11 +132,17 @@ def main():
 
     st.sidebar.title("Support Us")
     st.sidebar.info("Your support helps us improve AutoBot AI.")
-    st.sidebar.markdown("""
-        <p>Donate for Knowledge, We will be doing this again ❤️</p>
-        <a href="https://ibb.co/nBtGVnk"><img src="https://i.ibb.co/0Kv7WFJ/Google-Pay-QR.png" width="50"></a>
-    """, unsafe_allow_html=True)
-
+    st.sidebar.markdown("If you find this tool helpful, Consider Supporting us..")
+    components.html(
+        """
+        <form>
+            <script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_Oe7PyEQO3xI82m" async> </script>
+        </form>
+        """,
+        height=450,
+        width=300
+    )
+        
     if page == "🏠 Home":
         st.title("Welcome to AutoBot AI 💀")
         st.markdown("""
@@ -262,17 +268,6 @@ def main():
                         st.error(f"Failed to scrape HTML code: {e}")
             else:
                 st.error("Please enter a valid URL.")
-
-         st.markdown("If you find this tool useful, please consider supporting us by making a donation.")
-                        components.html(
-                                    """
-                                <form>
-                                    <script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_Oe7PyEQO3xI82m" async> </script>
-                                </form>
-                                    """,
-                        height=450,
-                        width=300
-                                        )
         display_footer()
 
     elif page == "GitHub Codespaces 🖥️":
@@ -379,16 +374,6 @@ def main():
             """)
 
         # Run the app with: streamlit run app.py
-            st.markdown("If you find this tool useful, please consider supporting us by making a donation.")
-                        components.html(
-                                    """
-                                <form>
-                                    <script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_Oe7PyEQO3xI82m" async> </script>
-                                </form>
-                                    """,
-                        height=450,
-                        width=300
-                                        )
         display_footer()
 
 if __name__ == "__main__":
