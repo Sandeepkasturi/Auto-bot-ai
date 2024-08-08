@@ -220,17 +220,6 @@ def main():
                     if response.text:
                         st.text("CODEX Response:")
                         st.write(response.text)
-                        st.sidebar.markdown("### Support Us")
-                        st.sidebar.markdown("If you find this tool useful, please consider supporting us by making a donation.")
-                        components.html(
-            """
-            <form>
-            <script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_Oe7PyEQO3xI82m" async> </script>
-        </form>
-        """,
-        height=450,
-        width=300
-    )
                         download_generated_code(response.text, "code", format='txt')
                     else:
                         st.error("No valid response received from the AI model.")
@@ -268,21 +257,22 @@ def main():
                         html_content = response.text
                         st.code(html_content, language="html")
                         download_html_code(html_content, url)
-                        st.sidebar.markdown("If you find this tool useful, please consider supporting us by making a donation.")
-    components.html(
-        """
-        <form>
-            <script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_Oe7PyEQO3xI82m" async> </script>
-        </form>
-        """,
-        height=450,
-        width=300
-    )
+                                        )
                     except requests.exceptions.RequestException as e:
                         st.error(f"Failed to scrape HTML code: {e}")
             else:
                 st.error("Please enter a valid URL.")
 
+         st.markdown("If you find this tool useful, please consider supporting us by making a donation.")
+                        components.html(
+                                    """
+                                <form>
+                                    <script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_Oe7PyEQO3xI82m" async> </script>
+                                </form>
+                                    """,
+                        height=450,
+                        width=300
+                        )
         display_footer()
 
     elif page == "GitHub Codespaces 🖥️":
@@ -389,16 +379,16 @@ def main():
             """)
 
         # Run the app with: streamlit run app.py
-            st.sidebar.markdown("If you find this tool useful, please consider supporting us by making a donation.")
-    components.html(
-        """
-        <form>
-            <script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_Oe7PyEQO3xI82m" async> </script>
-        </form>
-        """,
-        height=450,
-        width=300
-    )
+            st.markdown("If you find this tool useful, please consider supporting us by making a donation.")
+                        components.html(
+                                    """
+                                <form>
+                                    <script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_Oe7PyEQO3xI82m" async> </script>
+                                </form>
+                                    """,
+                        height=450,
+                        width=300
+                        )
         display_footer()
 
 if __name__ == "__main__":
