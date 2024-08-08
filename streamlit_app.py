@@ -272,7 +272,7 @@ def main():
                                     """,
                         height=450,
                         width=300
-                        )
+                                        )
         display_footer()
 
     elif page == "GitHub Codespaces 🖥️":
@@ -388,7 +388,7 @@ def main():
                                     """,
                         height=450,
                         width=300
-                        )
+                                        )
         display_footer()
 
 if __name__ == "__main__":
