@@ -132,7 +132,8 @@ def main():
 
     st.sidebar.title("Support Us")
     st.sidebar.info("Your support helps us improve AutoBot AI.")
-    st.sidebar.markdown("If you find this tool helpful, Consider Supporting us..")
+    st.sidebar.markdown("If you find this tool helpful, consider supporting us.")
+
     components.html(
         """
         <form>
@@ -141,7 +142,7 @@ def main():
         """,
         height=450,
         width=300
-    )
+)
         
     if page == "🏠 Home":
         st.title("Welcome to AutoBot AI 💀")
