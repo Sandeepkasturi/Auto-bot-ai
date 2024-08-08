@@ -16,12 +16,14 @@ model = GenerativeModel('gemini-pro')
 together_api_key = st.secrets["together_api_key"]
 client = Together(api_key=together_api_key)
 
+
 # Lottie animation loader
 def load_lottie_url(url: str):
     response = requests.get(url)
     if response.status_code != 200:
         return None
     return response.json()
+
 
 # Function to download HTML code
 def download_html_code(html_content, url):
@@ -34,6 +36,7 @@ def download_html_code(html_content, url):
     except Exception as e:
         st.error(f"Failed to download HTML code: {e}")
 
+
 # Function to redirect to GitHub Codespaces
 def redirect_to_codespaces():
     with st.spinner("Redirecting to GitHub Codespaces..."):
@@ -41,6 +44,7 @@ def redirect_to_codespaces():
     webbrowser.open_new_tab("https://github.com/codespaces")
     st.info("If the application can't redirect, use the link below:")
     st.markdown("[GitHub Codespaces](https://github.com/codespaces)")
+
 
 # Function to download generated code
 def download_generated_code(content, filename, format='txt'):
@@ -55,6 +59,7 @@ def download_generated_code(content, filename, format='txt'):
     st.markdown(href, unsafe_allow_html=True)
     os.remove(temp_filename)
 
+
 # Function to display file download link
 def get_binary_file_downloader_html(bin_file, file_label='Download Code'):
     with open(bin_file, 'rb') as f:
@@ -62,6 +67,7 @@ def get_binary_file_downloader_html(bin_file, file_label='Download Code'):
     b64 = base64.b64encode(data).decode()
     href = f'<a href="data:file/html;base64,{b64}" download="{bin_file}" target="_blank">{file_label}</a>'
     return href
+
 
 # Function to display footer
 def display_footer():
@@ -84,6 +90,7 @@ def display_footer():
     </div>
     """
     st.markdown(footer_html, unsafe_allow_html=True)
+
 
 # Function to fetch YouTube video suggestions
 def fetch_youtube_videos(query):
@@ -113,6 +120,7 @@ def fetch_youtube_videos(query):
         st.error(f"Failed to fetch YouTube videos. Status code: {response.status_code}")
     return video_details
 
+
 # Function to extract the main topic from the prompt
 def extract_topic(prompt):
     start_phrases = ["@codex", "codex", "@autobot"]
@@ -121,6 +129,7 @@ def extract_topic(prompt):
             return prompt[len(phrase):].strip()
     return prompt.strip()
 
+
 # Main Streamlit application
 def main():
     st.set_page_config(page_title="AutoBot AI", page_icon="💀", layout="wide", initial_sidebar_state="expanded")
@@ -128,7 +137,7 @@ def main():
     st.sidebar.image("autobot2.png", use_column_width=True)
     page = st.sidebar.selectbox("**MENU**",
                                 ["🏠 Home", "AutoBot 💀", "CODEX ⚡", "Web Scrapper 🌐", "GitHub Codespaces 🖥️",
-                                 "Mega Bot 🐸", "Refund & Privacy Policy 💸",])
+                                 "Mega Bot 🐸", "Refund & Privacy Policy 💸", ])
 
     st.sidebar.title("Support Us")
     st.sidebar.info("Your support helps us improve AutoBot AI.")
@@ -142,8 +151,8 @@ def main():
         """,
         height=450,
         width=300
-)
-        
+    )
+
     if page == "🏠 Home":
         st.title("Welcome to AutoBot AI 💀")
         st.markdown("""
@@ -264,7 +273,7 @@ def main():
                         html_content = response.text
                         st.code(html_content, language="html")
                         download_html_code(html_content, url)
-                                        )
+                            
                     except requests.exceptions.RequestException as e:
                         st.error(f"Failed to scrape HTML code: {e}")
             else:
@@ -347,7 +356,8 @@ def main():
         with tabs[2]:
             st.header("🖼️ Image Generation")
             st.markdown('---')
-            st.info("We are currently working on Tuning the Models, So the AI generated images might not match your prompts. Improve your Prompt Context to get good results 😊")
+            st.info(
+                "We are currently working on Tuning the Models, So the AI generated images might not match your prompts. Improve your Prompt Context to get good results 😊")
             st.markdown('---')
             user_prompt = st.text_input("Enter your image prompt:", "")
             model_choice = st.selectbox("Choose the image model", [
@@ -376,6 +386,7 @@ def main():
 
         # Run the app with: streamlit run app.py
         display_footer()
+
 
 if __name__ == "__main__":
     main()
