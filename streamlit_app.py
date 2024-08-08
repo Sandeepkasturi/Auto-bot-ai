@@ -141,17 +141,7 @@ def main():
 
     st.sidebar.title("Support Us")
     st.sidebar.info("Your support helps us improve AutoBot AI.")
-    st.sidebar.markdown("If you find this tool helpful, consider supporting us.")
-
-    components.html(
-        """
-        <form>
-            <script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_Oe7PyEQO3xI82m" async> </script>
-        </form>
-        """,
-        height=450,
-        width=300
-    )
+    
 
     if page == "🏠 Home":
         st.title("Welcome to AutoBot AI 💀")
@@ -176,6 +166,17 @@ def main():
 
         st.video("https://youtu.be/i0Q-NBrYpPI", start_time=0)
         display_footer()
+        st.sidebar.markdown("If you find this tool helpful, consider supporting us.")
+
+        components.html(
+            """
+            <form>
+                <script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_Oe7PyEQO3xI82m" async> </script>
+            </form>
+            """,
+            height=450,
+            width=300
+        )
 
     elif page == "AutoBot 💀":
         st.image("autobot2.png")
@@ -219,6 +220,18 @@ def main():
                     st.text("Download the generated code 💀:")
                     download_generated_code(response.text, "code", format='txt')
 
+                st.sidebar.markdown("If you find this tool helpful, consider supporting us.")
+
+                components.html(
+                    """
+                    <form>
+                        <script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_Oe7PyEQO3xI82m" async> </script>
+                    </form>
+                    """,
+                    height=450,
+                    width=300
+                )
+
         display_footer()
 
     elif page == "CODEX ⚡":
@@ -256,7 +269,17 @@ def main():
                 st.video(video['url'])
         else:
             st.info("No relevant YouTube videos found.")
+        st.sidebar.markdown("If you find this tool helpful, consider supporting us.")
 
+        components.html(
+            """
+            <form>
+                <script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_Oe7PyEQO3xI82m" async> </script>
+            </form>
+            """,
+            height=450,
+            width=300
+        )
         display_footer()
 
     elif page == "Web Scrapper 🌐":
@@ -273,11 +296,22 @@ def main():
                         html_content = response.text
                         st.code(html_content, language="html")
                         download_html_code(html_content, url)
-                            
+
                     except requests.exceptions.RequestException as e:
                         st.error(f"Failed to scrape HTML code: {e}")
             else:
                 st.error("Please enter a valid URL.")
+            st.sidebar.markdown("If you find this tool helpful, consider supporting us.")
+
+            components.html(
+                """
+                <form>
+                    <script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_Oe7PyEQO3xI82m" async> </script>
+                </form>
+                """,
+                height=450,
+                width=300
+            )
         display_footer()
 
     elif page == "GitHub Codespaces 🖥️":
@@ -334,6 +368,17 @@ def main():
                 1. Enter your prompt in the text box.
                 2. Click on the 'Generate Response' button to see the AI's response.
             """)
+            st.sidebar.markdown("If you find this tool helpful, consider supporting us.")
+
+            components.html(
+                """
+                <form>
+                    <script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_Oe7PyEQO3xI82m" async> </script>
+                </form>
+                """,
+                height=450,
+                width=300
+            )
 
         # Code Generation Tab
         with tabs[1]:
@@ -383,6 +428,17 @@ def main():
                 2. Choose an image generation model from the dropdown.
                 3. Click on the 'Generate Image' button to see the generated image.
             """)
+            st.sidebar.markdown("If you find this tool helpful, consider supporting us.")
+
+            components.html(
+                """
+                <form>
+                    <script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_Oe7PyEQO3xI82m" async> </script>
+                </form>
+                """,
+                height=450,
+                width=300
+            )
 
         # Run the app with: streamlit run app.py
         display_footer()
