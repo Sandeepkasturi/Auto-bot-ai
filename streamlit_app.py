@@ -9,12 +9,51 @@ import streamlit.components.v1 as components
 from urllib.parse import urlparse
 from streamlit_lottie import st_lottie
 from together import Together
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email import encoders
+from email.utils import formataddr
+from io import BytesIO
+from PIL import Image
 
 # Configure the Generative AI and Together clients
 configure(api_key=st.secrets["api_key"])
 model = GenerativeModel('gemini-pro')
 together_api_key = st.secrets["together_api_key"]
 client = Together(api_key=together_api_key)
+
+
+# Email sending function
+def send_email(subject, body, to_email, attachment=None, filename="attachment.png"):
+    from_email = st.secrets["from_email"]
+    from_password = st.secrets["from_password"]
+
+    msg = MIMEMultipart()
+    msg['From'] = formataddr(('AutoBot', from_email))
+    msg['To'] = to_email
+    msg['Subject'] = subject
+
+    msg.attach(MIMEText(body, 'plain'))
+
+    if attachment:
+        part = MIMEBase('application', 'octet-stream')
+        part.set_payload(attachment)
+        encoders.encode_base64(part)
+        part.add_header('Content-Disposition', f'attachment; filename={filename}')
+        msg.attach(part)
+
+    try:
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login(from_email, from_password)
+        text = msg.as_string()
+        server.sendmail(from_email, to_email, text)
+        server.quit()
+        st.success("Email sent successfully!")
+    except Exception as e:
+        st.error(f"Failed to send email: {e}")
 
 
 # Lottie animation loader
@@ -141,7 +180,6 @@ def main():
 
     st.sidebar.title("Support Us")
     st.sidebar.info("Your support helps us improve AutoBot AI.")
-    
 
     if page == "🏠 Home":
         st.title("Welcome to AutoBot AI 💀")
@@ -421,7 +459,12 @@ def main():
                     )
                     img_data = response.data[0].b64_json
                     img_bytes = base64.b64decode(img_data)
-                    st.image(img_bytes)
+                    img = Image.open(BytesIO(img_bytes))
+                    st.image(img)
+                    email_subject = "New Image Generation Prompt"
+                    email_body = f"Prompt: {user_prompt}\nModel: {model_choice}\nDetails: Your additional details here."
+                    send_email(email_subject, email_body, "skavtech.in@gmail.com", attachment=img_bytes,
+                               filename="generated_image.png")
             st.sidebar.write("""
                 **Image Generation Instructions:**
                 1. Enter your image prompt in the text box.
